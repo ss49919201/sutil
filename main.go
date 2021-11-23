@@ -2,10 +2,12 @@ package main
 
 import (
 	"os"
-
-	"github.com/slack-go/slack"
 )
 
 func main() {
-	_ = slack.New(os.Getenv("SLACK_TOKEN"))
+	client := NewClient()
+	err := client.PostMessage(os.Getenv("CHANNEL_ID"), "Hello World", true)
+	if err != nil {
+		panic(err)
+	}
 }
