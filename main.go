@@ -24,7 +24,7 @@ func main() {
 
 func countMessage(ctx *cli.Context) error {
 	client := slack.New(os.Getenv("OAUTH_TOKEN"))
-	res, err := client.GetConversationHistory(&slack.GetConversationHistoryParameters{
+	res, err := client.GetConversationHistoryContext(ctx.Context, &slack.GetConversationHistoryParameters{
 		ChannelID: os.Getenv("CHANNEL_ID"),
 		Latest:    os.Getenv("LATEST"),
 		Oldest:    os.Getenv("OLDEST"),
@@ -33,6 +33,8 @@ func countMessage(ctx *cli.Context) error {
 		log.Fatal(err)
 	}
 
+	// TODO:
+	// if res.HasMore {}
 	for i := range res.Messages {
 		user, err := client.GetUserInfo(res.Messages[i].User)
 		if err != nil {
