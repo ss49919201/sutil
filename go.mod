@@ -1,4 +1,4 @@
-module github.com/s-beats/slack-util
+module github.com/s-beats/sutil
 
 go 1.17
 
