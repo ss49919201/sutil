@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/s-beats/sutil/cmd"
 	"github.com/urfave/cli/v2"
 )
 
@@ -15,12 +16,12 @@ func main() {
 	app.Commands = []*cli.Command{
 		{
 			Name:   "aggregate-messages",
-			Action: app.AggregateMessages,
+			Action: cmd.AggregateMessages,
 		},
 	}
 
 	err := app.Run(os.Args)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Fatalln(err)
 	}
 }
