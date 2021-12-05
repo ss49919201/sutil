@@ -13,11 +13,12 @@ func AggregateMessages(cliContext *cli.Context) error {
 	ctx := cliContext.Context
 	client := getClient()
 
-	res, err := client.GetConversationHistoryContext(ctx, &slack.GetConversationHistoryParameters{
+	parm := &slack.GetConversationHistoryParameters{
 		ChannelID: os.Getenv("CHANNEL_ID"),
 		Latest:    os.Getenv("LATEST"),
 		Oldest:    os.Getenv("OLDEST"),
-	})
+	}
+	res, err := client.GetConversationHistoryContext(ctx, parm)
 	if err != nil {
 		return err
 	}
@@ -25,16 +26,25 @@ func AggregateMessages(cliContext *cli.Context) error {
 	// TODO:
 	// if res.HasMore {}
 
-	p := newPrinter()
+	userMsgCntMap := make(map[string]int)
 	for i := range res.Messages {
 		user, err := client.GetUserInfo(res.Messages[i].User)
 		if err != nil {
 			return err
 		}
-		fmt.Fprintln(p.tw, user.Name)
-		fmt.Fprintln(p.tw, res.Messages[i].Text)
+		if _, b := userMsgCntMap[user.Name]; b {
+			userMsgCntMap[user.Name]++
+		} else {
+			userMsgCntMap[user.Name] = 0
+		}
 	}
-	return nil
+
+	p := newPrinter()
+	for name, cnt := range userMsgCntMap {
+		fmt.Fprint(p.tw, name)
+		fmt.Fprintf(p.tw, "\t%d\n", cnt)
+	}
+	return p.tw.Flush()
 }
 
 type printer struct {
