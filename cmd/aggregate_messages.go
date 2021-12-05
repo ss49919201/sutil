@@ -3,20 +3,26 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"text/tabwriter"
 
+	"github.com/rs/zerolog/log"
 	"github.com/slack-go/slack"
 	"github.com/urfave/cli/v2"
 )
 
 func AggregateMessages(cliContext *cli.Context) error {
 	ctx := cliContext.Context
-	client := getClient()
+	from := cliContext.Int64("from")
+	to := cliContext.Int64("to")
 
+	log.Info().Msg(fmt.Sprintf("aggregate %d ~ %d", from, to))
+
+	client := getClient()
 	parm := &slack.GetConversationHistoryParameters{
 		ChannelID: os.Getenv("CHANNEL_ID"),
-		Latest:    os.Getenv("LATEST"),
-		Oldest:    os.Getenv("OLDEST"),
+		Latest:    strconv.Itoa(int(to)),
+		Oldest:    strconv.Itoa(int(from)),
 	}
 	res, err := client.GetConversationHistoryContext(ctx, parm)
 	if err != nil {
@@ -40,11 +46,16 @@ func AggregateMessages(cliContext *cli.Context) error {
 	}
 
 	p := newPrinter()
+
+	// set column title
+	fmt.Fprint(p.tw, "USER NAME")
+	fmt.Fprint(p.tw, "\tMESSAGES COUNT\n")
+
 	for name, cnt := range userMsgCntMap {
 		fmt.Fprint(p.tw, name)
 		fmt.Fprintf(p.tw, "\t%d\n", cnt)
 	}
-	return p.tw.Flush()
+	return p.Print()
 }
 
 type printer struct {
@@ -53,7 +64,7 @@ type printer struct {
 
 func newPrinter() *printer {
 	return &printer{
-		tw: tabwriter.NewWriter(os.Stdout, 0, 4, 0, ' ', 0),
+		tw: tabwriter.NewWriter(os.Stdout, 0, 8, 2, ' ', 0),
 	}
 }
 
