@@ -7,5 +7,5 @@ import (
 )
 
 func getClient() *slack.Client {
-	return slack.New(os.Getenv("OAUTH_TOKEN"))
+	return slack.New(os.Getenv("SLACK_OAUTH_TOKEN"))
 }
