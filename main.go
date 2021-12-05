@@ -1,12 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 	"time"
 
 	"github.com/s-beats/sutil/cmd"
-	"github.com/s-beats/sutil/logger"
 	"github.com/urfave/cli/v2"
 )
 
@@ -20,14 +20,16 @@ func main() {
 			Name:   "aggregate-messages",
 			Action: cmd.AggregateMessages,
 			Flags: []cli.Flag{
+				&cli.StringFlag{
+					Name:     "chanid",
+					Required: true,
+				},
 				&cli.Int64Flag{
 					Name:        "from",
-					Aliases:     []string{"f"},
 					DefaultText: "0",
 				},
 				&cli.Int64Flag{
 					Name:        "to",
-					Aliases:     []string{"t"},
 					DefaultText: strconv.Itoa(int(time.Now().Unix())),
 				},
 			},
@@ -36,6 +38,6 @@ func main() {
 
 	err := app.Run(os.Args)
 	if err != nil {
-		logger.Error(err)
+		fmt.Println(err)
 	}
 }
