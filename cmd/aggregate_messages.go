@@ -53,7 +53,7 @@ func (u *userMessagesCountList) appendUser(userName string) *userMessagesCountLi
 }
 
 func getConversationHistory(ctx context.Context, chanID, latest, oldest string) (*slack.GetConversationHistoryResponse, error) {
-	client := getClient()
+	client := ctx.Value(slackClientContextKey).(*slack.Client)
 	parm := &slack.GetConversationHistoryParameters{
 		ChannelID: chanID,
 		Latest:    latest,
