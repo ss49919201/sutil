@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/rs/zerolog v1.27.0
 	github.com/slack-go/slack v0.10.0
-	github.com/urfave/cli/v2 v2.10.3
+	github.com/urfave/cli/v2 v2.11.0
 )
 
 require (
