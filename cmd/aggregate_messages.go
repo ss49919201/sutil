@@ -99,10 +99,12 @@ func (p *printer) initTable() {
 	fmt.Fprint(p.tw, "\tMESSAGES COUNT\n")
 }
 
+// Print print bufferd data
 func (p *printer) Print() error {
 	return p.tw.Flush()
 }
 
+// AggregateMessages aggreagate messages of each user
 func AggregateMessages(cliContext *cli.Context) error {
 	ctx := cliContext.Context
 	ctx = context.WithValue(ctx, slackClientContextKey, getClient())
