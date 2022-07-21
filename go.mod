@@ -1,6 +1,6 @@
 module github.com/s-beats/sutil
 
-go 1.17
+go 1.18
 
 require (
 	github.com/slack-go/slack v0.11.0
