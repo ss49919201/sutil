@@ -3,7 +3,7 @@ module github.com/s-beats/sutil
 go 1.17
 
 require (
-	github.com/slack-go/slack v0.11.0
+	github.com/slack-go/slack v0.11.1
 	github.com/urfave/cli/v2 v2.11.0
 )
 
